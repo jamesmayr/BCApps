@@ -19,6 +19,7 @@ codeunit 7762 "AOAI Chat Compl Params Impl"
         MaxHistory: Integer;
         PresencePenalty: Decimal;
         FrequencyPenalty: Decimal;
+        ReasoningEffort: Text;
         TemperatureErr: Label 'Temperature must be between 0.0 and 2.0.';
         PresencePenaltyErr: Label 'Presence penalty must be between -2.0 and 2.0.';
         FrequencyPenaltyErr: Label 'Frequency penalty must be between -2.0 and 2.0.';
@@ -70,6 +71,14 @@ codeunit 7762 "AOAI Chat Compl Params Impl"
             InitializeDefaults();
 
         exit(FrequencyPenalty);
+    end;
+
+    procedure GetReasoningEffort(): Text
+    begin
+        if not Initialized then
+            InitializeDefaults();
+
+        exit(ReasoningEffort);
     end;
 
     procedure GetAOAIPolicyParams(): Codeunit "AOAI Policy Params"
@@ -146,6 +155,14 @@ codeunit 7762 "AOAI Chat Compl Params Impl"
         FrequencyPenalty := NewFrequencyPenalty;
     end;
 
+    procedure SetReasoningEffort(NewReasoningEffort: Text)
+    begin
+        if not Initialized then
+            InitializeDefaults();
+
+        ReasoningEffort := NewReasoningEffort;
+    end;
+
     [NonDebuggable]
     procedure AddChatCompletionsParametersToPayload(var Payload: JsonObject)
     begin
@@ -155,6 +172,9 @@ codeunit 7762 "AOAI Chat Compl Params Impl"
         Payload.Add('temperature', GetTemperature());
         Payload.Add('presence_penalty', GetPresencePenalty());
         Payload.Add('frequency_penalty', GetFrequencyPenalty());
+
+        if GetReasoningEffort() <> '' then
+            Payload.Add('reasoning_effort', GetReasoningEffort());
 
         if IsJsonMode() then
             Payload.Add('response_format', GetJsonResponseFormat());
@@ -177,6 +197,7 @@ codeunit 7762 "AOAI Chat Compl Params Impl"
         SetMaxTokens(0);
         SetMaxHistory(10);
         SetJsonMode(false);
+        SetReasoningEffort('');
 
         DefaultPolicyParams.InitializeDefaults();
         SetAOAIPolicyParams(DefaultPolicyParams);

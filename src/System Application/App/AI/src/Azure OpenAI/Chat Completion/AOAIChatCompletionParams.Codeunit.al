@@ -64,6 +64,15 @@ codeunit 7761 "AOAI Chat Completion Params"
     end;
 
     /// <summary>
+    /// Gets the reasoning effort level used by the model for reasoning tasks.
+    /// </summary>
+    /// <returns>The reasoning effort value (e.g., 'low', 'medium', 'high'). Returns an empty string if not set.</returns>
+    procedure GetReasoningEffort(): Text
+    begin
+        exit(AOAIChatComplParamsImpl.GetReasoningEffort());
+    end;
+
+    /// <summary>
     /// Gets the current AOAI policy parameters containing harms severity and XPIA detection settings.
     /// </summary>
     /// <returns>The AOAI policy parameters.</returns>
@@ -134,6 +143,16 @@ codeunit 7761 "AOAI Chat Completion Params"
     procedure SetFrequencyPenalty(NewFrequencyPenalty: Decimal)
     begin
         AOAIChatComplParamsImpl.SetFrequencyPenalty(NewFrequencyPenalty);
+    end;
+
+    /// <summary>
+    /// Sets the reasoning effort level to constrain effort on reasoning tasks. Applicable to reasoning models like o1 and o3.
+    /// </summary>
+    /// <param name="NewReasoningEffort">The reasoning effort value. Accepted values are 'low', 'medium', or 'high'. Use an empty string to not include the parameter.</param>
+    /// <remarks>Default is empty string (parameter not sent). This parameter is only supported by reasoning models.</remarks>
+    procedure SetReasoningEffort(NewReasoningEffort: Text)
+    begin
+        AOAIChatComplParamsImpl.SetReasoningEffort(NewReasoningEffort);
     end;
 
     /// <summary>
